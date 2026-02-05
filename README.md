@@ -247,8 +247,8 @@ This system was built for a client requiring document analysis without external 
 Check out my other AI/ML and Web3 work:
 
 - **[DAMN - Decentralized AI Memory Network](https://github.com/rahulkhunte/DAMN-prototype)** - Ethereum + IPFS memory layer for autonomous agents (built in 3 hours)
-- **AI Image Generation Bot** - Production Telegram bot with GPU acceleration
-- **Crypto Whale Tracker** - Real-time Ethereum monitoring (built in 1 hour)
+- **[AI Image Generation Bot](https://github.com/rahulkhunte/ai-image-bot)** - Production Telegram bot with GPU acceleration
+- **[Crypto Whale Tracker](https://github.com/rahulkhunte/crypto-whale-tracker)** - Real-time Ethereum monitoring (built in 1 hour)
 
 ---
 
