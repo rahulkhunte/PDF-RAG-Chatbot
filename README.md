@@ -4,14 +4,6 @@ Production-ready document Q&A system built in **one night** using Retrieval Augm
 
 Built for client work requiring fast, accurate document analysis with source verification. Deployed on self-managed L40 infrastructure at **$10/month** operational cost.
 
-![Landing Page](screenshots/01-landing.jpg)
-![Upload Interface](screenshots/02-upload.jpg)
-![Processing Status](screenshots/03-processing.jpg)
-![Question Interface](screenshots/04-question.jpg)
-![Answer with Sources](screenshots/05-answer-sources.jpg)
-![GPU Terminal](screenshots/06-gpu-terminal.jpg)
-
----
 
 ## 🎯 Overview
 
@@ -66,6 +58,32 @@ Query → Semantic Search (k=3) → Context Retrieval
 | **RAM** | 190GB |
 | **OS** | Ubuntu + CUDA 12.x |
 | **Deployment** | Self-managed VPS ($10/month) |
+
+---
+
+## 🎬 Demo Screenshots
+
+### Landing Page
+![PDF Chatbot Interface](screenshots/01-landing.jpg)
+*Clean Streamlit interface powered by Llama 3.1 on L40 GPU*
+
+### Upload & Process
+![Upload PDFs](screenshots/02-upload.jpg)
+*Drag-and-drop PDF upload*
+
+![Processing](screenshots/03-processing.jpg)
+*L40 GPU processing with real-time status*
+
+### Query & Response
+![Ask Question](screenshots/04-question.jpg)
+*Natural language queries - "what is this university"*
+
+![Answer with Sources](screenshots/05-answer-sources.jpg)
+*Contextual answers with expandable source citations*
+
+### Infrastructure
+![L40 GPU Terminal](screenshots/06-gpu-terminal.jpg)
+*NVIDIA L40 (46GB VRAM) - 1.07 second inference time confirmed*
 
 ---
 
