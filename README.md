@@ -275,11 +275,10 @@ Check out my other AI/ML and Web3 work:
 **Rahul Khunte**  
 *AI/ML Engineer | GPU Computing | Infrastructure Optimization*
 
-- 📧 Email: rahulk.rk903@gmail.com
 - 🌐 Portfolio: [rahulkhunte.github.io/portfolio](https://rahulkhunte.github.io/portfolio)
 - 💻 GitHub: [@rahulkhunte](https://github.com/rahulkhunte)
 - 📍 Location: Korba, Chhattisgarh, India
-- 💼 Available for freelance AI/ML projects | $20-30/hr
+- 💼 Available for freelance AI/ML projects
 
 ---
 
