@@ -23,7 +23,7 @@ st.set_page_config(
 # Main title with branding
 st.title("🧠 PDF Knowledge Base Chatbot")
 st.markdown("**Powered by Llama 3.1 | Built on NVIDIA L40 Enterprise GPU**")
-st.markdown("Upload PDFs and ask questions - AI answers with source citations")
+st.markdown("Upload PDFs and ask questions - AI answers with retrieved source passages")
 
 # Sidebar for PDF upload
 with st.sidebar:
@@ -157,8 +157,8 @@ else:
     ### ⚡ Why This Bot:
     - **No API Costs** - 100% local Llama 3.1 (you own the data)
     - **Fast Processing** - Enterprise NVIDIA L40 GPU
-    - **Source Citations** - Always shows where answers come from
-    - **Local LLM inference** - Your data never leaves your infrastructure
+    - **Source passages** - Shows the retrieved passages and pages behind each answer
+    - **Local LLM inference** - Documents are not sent to an external LLM API
     """)
 
 # Footer
