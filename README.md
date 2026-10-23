@@ -1,27 +1,21 @@
 # 🧠 PDF RAG Chatbot with L40 GPU
 
-Production-ready document Q&A system built in **one night** using Retrieval Augmented Generation and enterprise GPU acceleration.
-
-Built for client work requiring fast, accurate document analysis with source verification. Deployed on self-managed L40 infrastructure at **$10/month** operational cost.
-
+Document Q&A app built with Retrieval Augmented Generation: upload PDFs, ask questions, and get answers from a local Llama 3.1 8B model, with the retrieved source passages and page numbers shown in the UI.
 
 ## 🎯 Overview
 
-AI chatbot that ingests PDF documents and answers questions with contextual understanding using vector embeddings and large language models. Built in a single night for a client requiring fast, accurate document analysis at scale without external API dependencies.
-
-**Key Achievement:** Zero API costs, complete data privacy, 1.07-second response times.
+The app ingests PDF documents, splits them into chunks, embeds them into a vector store and answers questions using the most relevant chunks as context for a local LLM. Everything runs on your own machine: the LLM is served by Ollama, so no external LLM API is needed. Tested on an NVIDIA L40 GPU at about 2 s per answer.
 
 ---
 
 ## ✨ Features
 
-- **⚡ Lightning-Fast Inference:** NVIDIA L40 (46GB) - 1.07s average response time
-- **🔍 RAG Architecture:** Vector embeddings + semantic search for accurate context retrieval
-- **📚 Multi-PDF Support:** Upload and query across multiple documents simultaneously
-- **📖 Source Citations:** Always shows which page/section the answer came from
-- **🏠 Local Inference:** 100% on-premise Llama 3.1 - no OpenAI/external API needed
-- **✅ Production-Ready:** Handled real client queries with Streamlit interface
-- **💰 Cost-Optimized:** $10/month infrastructure vs $100s/month for API services
+- **🔍 RAG pipeline:** Sentence embeddings + semantic search (top-3 chunks) for context retrieval
+- **📚 Multi-PDF upload:** Upload and index several PDFs at once
+- **📖 Source passages:** Each answer has an expandable list of the 3 retrieved passages with their page numbers
+- **🏠 Local inference:** Llama 3.1 8B via Ollama — no OpenAI/external LLM API needed
+- **⚡ GPU-accelerated:** Tested on an NVIDIA L40 (46 GB) — about 2 s per answer in testing
+- **💬 Chat UI:** Streamlit chat interface with on-screen history
 
 ---
 
@@ -38,7 +32,7 @@ Query → Semantic Search (k=3) → Context Retrieval
                                     ↓
                       Llama 3.1 8B (Ollama) + Prompt
                                     ↓
-                      Answer + Source Citations
+                      Answer + Source Passages (with page numbers)
 ```
 
 ---
@@ -49,15 +43,11 @@ Query → Semantic Search (k=3) → Context Retrieval
 |-----------|-----------|
 | **LLM** | Llama 3.1 8B via Ollama |
 | **Embeddings** | Sentence Transformers (all-MiniLM-L6-v2) |
-| **Vector DB** | ChromaDB with persistent storage |
+| **Vector DB** | ChromaDB (persisted to `/tmp/chroma_db`) |
 | **Framework** | LangChain + Streamlit |
 | **PDF Processing** | PyPDF |
 | **Text Splitting** | RecursiveCharacterTextSplitter |
-| **GPU** | NVIDIA L40 46GB VRAM |
-| **CPU** | AMD Genoa 48-core |
-| **RAM** | 190GB |
-| **OS** | Ubuntu + CUDA 12.x |
-| **Deployment** | Self-managed VPS ($10/month) |
+| **GPU (tested)** | NVIDIA L40 46GB VRAM |
 
 ---
 
@@ -65,53 +55,56 @@ Query → Semantic Search (k=3) → Context Retrieval
 
 ### Landing Page
 ![PDF Chatbot Interface](screenshots/01-landing.jpg)
-*Clean Streamlit interface powered by Llama 3.1 on L40 GPU*
+*Streamlit interface*
 
 ### Upload & Process
 ![Upload PDFs](screenshots/02-upload.jpg)
 *Drag-and-drop PDF upload*
 
 ![Processing](screenshots/03-processing.jpg)
-*L40 GPU processing with real-time status*
+*Uploading a PDF*
 
-### Query & Response
+### Ready for Questions
 ![Ask Question](screenshots/04-question.jpg)
-*Natural language queries - "what is this university"*
-
-![Answer with Sources](screenshots/05-answer-sources.jpg)
-*Contextual answers with expandable source citations*
+*PDF processed (52 chunks), ready for questions*
 
 ### Infrastructure
+![Ollama log](screenshots/05-answer-sources.jpg)
+*Ollama log: all 33 model layers offloaded to the GPU; two answers took 1.9 s and 2.4 s*
+
 ![L40 GPU Terminal](screenshots/06-gpu-terminal.jpg)
-*NVIDIA L40 (46GB VRAM) - 1.07 second inference time confirmed*
+*`nvidia-smi` on the NVIDIA L40 (46GB VRAM)*
 
 ---
 
 ## 🚀 Performance
 
-- **Response Time:** 1.07 seconds average (including embedding + inference)
-- **Accuracy:** High contextual relevance with source page citations
-- **Cost:** ~$10/month infrastructure (vs. $100s/month for API services)
-- **Privacy:** 100% on-premise - client data never leaves infrastructure
-- **Scalability:** Handles multi-document knowledge bases with persistent vector storage
+- **Response Time:** about 2 s per answer in testing (NVIDIA L40, Llama 3.1 8B fully on GPU)
+- **Privacy:** LLM inference is local — documents are not sent to an external LLM API
 
 ---
 
 ## 💡 Technical Highlights
 
-- **Efficient Chunking:** 1000-character chunks with 200-char overlap for optimal context windows
-- **GPU Optimization:** Local Ollama inference leveraging L40 for cost-effective throughput
+- **Chunking:** 1000-character chunks with 200-char overlap
+- **GPU Inference:** Local Ollama inference with the full model offloaded to the L40
 - **Context Management:** Top-k=3 retrieval balancing relevance vs. token limits
-- **Session Persistence:** ChromaDB with persistent directory for multi-session knowledge retention
-- **Source Tracking:** Metadata preservation through document pipeline for citations
-- **Infrastructure Economics:** Self-managed VPS at $10/month vs $1000+/month hosted GPU
+- **Source Tracking:** PDF page metadata carried through the pipeline and shown with each retrieved passage
+
+---
+
+## ⚠️ Limitations
+
+- **No chat memory:** each question is answered on its own; earlier messages are not sent to the model.
+- **Not multi-user safe:** all uploads go into one shared Chroma collection in `/tmp/chroma_db`, so chunks from earlier uploads (including other users') can be retrieved.
+- **Page numbers are 0-based:** pages are shown as PyPDF reports them, so the first page appears as "Page 0".
 
 ---
 
 ## 🛠️ Installation
 
 ### Prerequisites
-- NVIDIA GPU (tested on L40, works on T4/A100/etc.)
+- NVIDIA GPU (tested on L40)
 - CUDA 12.x
 - Ollama installed with Llama 3.1 model
 - Python 3.10+
@@ -157,72 +150,19 @@ model="llama3.1:8b"  # or llama3.1:70b for larger GPU
 
 ## 📊 Use Cases
 
-### Document Analysis:
-- Legal contract review and Q&A
 - Technical documentation search
-- Research paper summaries
+- Research paper Q&A
 - Product manual assistance
-- Compliance document search
-
-### Enterprise Applications:
-- Customer support knowledge bases
 - Internal policy documentation
-- Training material assistants
-- Meeting transcript analysis
-
-### Why This Approach:
-- **No API Costs:** Llama 3.1 runs locally
-- **Data Privacy:** Documents never leave your infrastructure
-- **Fast Deployment:** Production-ready in 24 hours
-- **Scalable:** Handles 100s of documents with vector storage
-
----
-
-## 🔒 Privacy & Security
-
-- ✅ Client documents processed in isolated environment
-- ✅ No external API calls - all inference local
-- ✅ GPU memory cleared after sessions
-- ✅ Vector store can be encrypted at rest
-- ✅ Compliant with data residency requirements
-- ✅ GDPR-friendly architecture
-
----
-
-## 📈 Cost Comparison
-
-### Traditional Approach:
-- **OpenAI API:** ~$0.01-0.05/query = $100-500/month moderate usage
-- **Hosted GPU (RunPod/Lambda):** $1.50-2.50/hour = $1,080-1,800/month
-- **Total:** $1,180-2,300/month
-
-### This Implementation:
-- **Self-managed VPS:** $10/month
-- **One-time setup cost**
-- **Unlimited queries**
-- **ROI:** Pays for itself after 10-20 queries
-
----
-
-## 📝 Development Timeline
-
-Built in **one night** - rapid prototyping and deployment:
-
-- **Hour 1-2:** Setup L40 VPS, install dependencies, Ollama
-- **Hour 3-4:** Implement LangChain RAG pipeline
-- **Hour 5-6:** Build Streamlit interface
-- **Hour 7-8:** Test with client documents, optimize chunking
-
-**Result:** Production-ready system in <8 hours
 
 ---
 
 ## 🔬 Future Enhancements
 
+- Chat memory across questions
+- Per-user / per-session vector collections
 - Multi-modal support (images, tables from PDFs)
 - Fine-tuned embeddings for domain-specific documents
-- Kubernetes deployment for horizontal scaling
-- Advanced citation formatting (APA, MLA)
 - REST API for programmatic access
 - Multi-language support
 
@@ -246,27 +186,13 @@ PDF-RAG-Chatbot/
 
 ---
 
-## 🤝 Client Work
-
-This system was built for a client requiring document analysis without external API dependencies. Requirements included:
-
-- ✅ Fast response times (<2s)
-- ✅ Complete data privacy
-- ✅ Cost-effective long-term operation
-- ✅ Easy deployment and maintenance
-- ✅ Source verification
-
-**All requirements exceeded.** System deployed and used in production.
-
----
-
 ## 🌟 Related Projects
 
 Check out my other AI/ML and Web3 work:
 
-- **[DAMN - Decentralized AI Memory Network](https://github.com/rahulkhunte/DAMN-prototype)** - Ethereum + IPFS memory layer for autonomous agents (built in 3 hours)
-- **[AI Image Generation Bot](https://github.com/rahulkhunte/ai-image-bot)** - Production Telegram bot with GPU acceleration
-- **[Crypto Whale Tracker](https://github.com/rahulkhunte/crypto-whale-tracker)** - Real-time Ethereum monitoring (built in 1 hour)
+- **[DAMN - Decentralized AI Memory Network](https://github.com/rahulkhunte/DAMN-prototype)** - Ethereum + IPFS memory layer for autonomous agents
+- **[AI Image Generation Bot](https://github.com/rahulkhunte/ai-image-bot)** - Telegram image-generation bot with Telegram Stars payments
+- **[Crypto Whale Tracker](https://github.com/rahulkhunte/crypto-whale-tracker)** - Real-time Ethereum monitoring
 
 ---
 
@@ -290,6 +216,6 @@ MIT License - feel free to use for your own projects
 
 <div align="center">
 
-**🧠 Built with Llama 3.1 on NVIDIA L40 | 🚀 Production AI Systems | 💰 No API Costs | ⚡ One Night Build**
+**🧠 Built with Llama 3.1 on NVIDIA L40 | 💰 No LLM API Costs**
 
 </div>
