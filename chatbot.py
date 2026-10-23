@@ -158,9 +158,9 @@ else:
     - **No API Costs** - 100% local Llama 3.1 (you own the data)
     - **Fast Processing** - Enterprise NVIDIA L40 GPU
     - **Source Citations** - Always shows where answers come from
-    - **Privacy First** - Your data never leaves your infrastructure
+    - **Local LLM inference** - Your data never leaves your infrastructure
     """)
 
 # Footer
 st.markdown("---")
-st.markdown("🧠 **Built with Llama 3.1 on NVIDIA L40** | 🚀 Deployable in 24 hours | 📦 No OpenAI API needed")
+st.markdown("🧠 **Built with Llama 3.1 on NVIDIA L40** | 🚀 Local LLM inference | 📦 No OpenAI API needed")
